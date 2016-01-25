@@ -32,14 +32,6 @@ int main(int argc, char* argv[]) {
 
     cout << endl << endl << endl;
 
-    int test_digit = 39;
-
-    cout << "Digit: " << test_digit << endl;
-    test_digit -= test_digit % 10;
-    cout << "Tens:  " << test_digit << endl;
-    test_digit /= 10;
-    cout << "Right-aligned: " << test_digit << endl << endl << endl;
-
     cout << "Performing single digit multiplication" << endl << " ";
     operand_test.PrintSymNum();
 
