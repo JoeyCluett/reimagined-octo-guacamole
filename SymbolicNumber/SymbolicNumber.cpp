@@ -5,7 +5,7 @@
 
     Date Created: 1/4/2016
 
-    Date Last Modified: 1/5/2016
+    Date Last Modified: 1/25/2016
 
     Purpose:
         This library makes the creation of symbolic numbers much easier. Note that
@@ -19,6 +19,8 @@
     /*Standard functions for setting up symbolic number(s)*/
 
 SymbolicNumber::SymbolicNumber(void) {
+    is_positive = true;
+    is_negative = false;
     show_point = true;
 }
 
@@ -140,8 +142,8 @@ void SymbolicNumber::PrintSymNum(void) {
 
     cout << endl;
 
-    cout << "Digits to the left of decimal point: " << digits_left << endl;
-    cout << "Digits to the right of decimal point: " << digits_right << endl << endl;
+    //cout << "Digits to the left of decimal point: " << digits_left << endl;
+    //cout << "Digits to the right of decimal point: " << digits_right << endl << endl;
 }
 
     /* Various getter and setter method implementations */

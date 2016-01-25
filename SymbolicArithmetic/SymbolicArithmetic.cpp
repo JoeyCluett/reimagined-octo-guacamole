@@ -5,12 +5,15 @@
 
     Date Created: 1/5/2016
 
-    Date Last Modified: 1/5/2016
+    Date Last Modified: 1/25/2016
 
     Purpose:
+        To perform arbitrary precision arithmetic on two symbolic numbers
 
     Note:
-
+        This library requires quite a bit of memory. The larger the number you want to
+        use, the more memory you will need. The actual symbolic number digits are stored
+        in std::vector 's.
 */
 
 #include <iostream>
@@ -62,6 +65,7 @@ SymNum* SymbolicArithmetic::add(SymNum* augend, SymNum* addend) {
     }
 
     //result->PrintSymNum();
+    //result->SetSign(SYMNUM_POSITIVE);
 
     return result;
 
@@ -74,7 +78,7 @@ SymNum* SymbolicArithmetic::subtract(SymNum* minuend, SymNum* subtrahend) {
 SymNum* SymbolicArithmetic::multiply(SymNum* multiplicand, SymNum* multiplier) {
     SymNum* result = new SymNum;
     align_decimal(multiplicand, multiplier);
-    result->clear_vector();
+
 }
 
 SymNum* SymbolicArithmetic::divide(SymNum* dividend, SymNum* divisor) {
@@ -145,7 +149,35 @@ char SymbolicArithmetic::convert_int(int digit) {  //decimal-to-char
     }
 }
 
+SymNum* SymbolicArithmetic::multiply_single_digit(SymNum* main_operand, int constant_int) {
 
+    //test if constant_int is in valid range
+    if(constant_int < 0 || constant_int > 9)
+        return 0;
+
+    SymNum* result = new SymNum;
+    result->clear_vector();
+
+    int carry_over = 0;
+    int temp_result = 0, ones_ph = 0;
+
+    //iterate through main_operand, multiplying each digit by multiplier
+    for(int i = main_operand->get_vector_size() - 1; i >= 0; i--) {
+        temp_result = convert_char(main_operand->at_vector_index(i)) * constant_int;
+        temp_result += carry_over;
+        ones_ph = temp_result % 10;
+        result->insert_at_begin(convert_int(ones_ph));
+        carry_over = (temp_result - ones_ph) / 10; //base ten right shift
+    }
+
+    if(carry_over)
+        result->insert_at_begin(convert_int(carry_over));
+
+    //set variables controlling where decimal point appears
+    result->set_digits_right(main_operand->get_digits_right());
+    result->set_digits_left(result->get_vector_size() - main_operand->get_digits_right());
+    return result;
+}
 
 
 

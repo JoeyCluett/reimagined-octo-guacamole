@@ -5,7 +5,7 @@
 
     Date Created: 1/4/2016
 
-    Date Last Modified: 1/5/2016
+    Date Last Modified: 1/25/2016
 
     Purpose:
         This library makes the creation of symbolic numbers much easier. Note that
@@ -28,9 +28,7 @@
 using namespace std;
 
 class SymbolicNumber {
-
     protected:
-
 
     public:
         SymbolicNumber(void); //default constructor
@@ -57,7 +55,7 @@ class SymbolicNumber {
         void set_digits_left(unsigned int new_num);
         bool get_sign(void);
 
-        //vector manipulation methods
+        //vector manipulation wrapper methods
         int get_vector_size(void);
         char at_vector_index(int index);
         void clear_vector(void);
@@ -67,14 +65,14 @@ class SymbolicNumber {
     private:
         vector<char> symnum; //structure that holds actual digits
 
+        //2 bools to (later) implement complex numbers
         bool is_negative;
         bool is_positive;
+
         bool show_point; //set/reset with ShowDecimal()
 
         unsigned int digits_right; //number of digits to the right of the decimal point
         unsigned int digits_left;  //number of digits to the left of the decimal point
-
-
 };
 
 #endif // SYMBOLICNUMBER_H

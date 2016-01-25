@@ -20,6 +20,7 @@ int main(int argc, char* argv[]) {
 
     SymNum operand_1("999999999999999999999999999999999999999999999999999999.99999999999999999999999999999999999999999999999999999999999");
     SymNum operand_2(                                                      ".00000000000000000000000000000000000000000000000000000000001");
+    SymNum operand_test("22222.22222");
 
     SymbolicArithmetic math_engine;
 
@@ -28,6 +29,26 @@ int main(int argc, char* argv[]) {
     operand_1.PrintSymNum();
     operand_2.PrintSymNum();
     operand_3->PrintSymNum();
+
+    cout << endl << endl << endl;
+
+    int test_digit = 39;
+
+    cout << "Digit: " << test_digit << endl;
+    test_digit -= test_digit % 10;
+    cout << "Tens:  " << test_digit << endl;
+    test_digit /= 10;
+    cout << "Right-aligned: " << test_digit << endl << endl << endl;
+
+    cout << "Performing single digit multiplication" << endl << " ";
+    operand_test.PrintSymNum();
+
+    cout << "x          9" << endl;
+    cout << "------------" << endl;
+
+    SymNum* operand_4 = math_engine.multiply_single_digit(&operand_test, 9);
+
+    operand_4->PrintSymNum();
 
     return 0;
 }
