@@ -5,7 +5,7 @@
 
     Date Created: 1/4/2016
 
-    Date Last Modified: 1/25/2016
+    Date Last Modified: 1/27/2016
 
     Purpose:
         This library makes the creation of symbolic numbers much easier. Note that
@@ -76,19 +76,33 @@ void SymbolicNumber::SetSign(bool sign) {
 }
 
 void SymbolicNumber::TruncateLeadingZeroes(void) {
-    if(digits_left > 0) {
-        int temp_dig = digits_left;
-        for(int i = 0; (symnum.at(0) == '0') && (i <= temp_dig); i++) {
-            symnum.erase(symnum.begin());
-            digits_left--;
+    /* new method of truncating leading zeroes:
+            1.) Count ALL leading zeroes before deleting them
+            2.) Delete leading zeroes, if any
+    */
+    // 3 \t
+    bool hit_zero = false; //set when first zero is encountered
+    int num_zero = 0;
+    for(int i = 0; i < digits_left; i++) {
+        if((symnum.at(i) == '0') && !hit_zero) {
+            num_zero++;
+        } else {
+            hit_zero = true;
         }
     }
+    //finished counting zeroes
+/*
+    //delete correct amount of zeroes
+    for(int i = 0; i < num_zero; i++) {
+        symnum.erase(symnum.begin());
+    }
+*/
 }
 
 void SymbolicNumber::TruncateTrailingZeroes(void) {
     if(digits_right > 0) {
         int temp_dig = digits_right;
-        for(int i = 0; (symnum.at(digits_left + temp_dig - i - 1) == '0') && (i <= temp_dig); i++) {
+        for(int i = 0; (symnum.at(digits_left + temp_dig - i - 1) == '0') && (i < temp_dig); i++) {
             symnum.pop_back();
             digits_right--;
         }
@@ -107,6 +121,9 @@ void SymbolicNumber::TruncateDecimal(void) {
 }
 
 void SymbolicNumber::AppendLeadingZeroes(int num_zeroes) {
+    if(num_zeroes < 0)
+        return;
+
     for(int i = 0; i < num_zeroes; i++) {
         symnum.insert(symnum.begin(), '0');
     }

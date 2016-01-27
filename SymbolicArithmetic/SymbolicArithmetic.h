@@ -5,7 +5,7 @@
 
     Date Created: 1/5/2016
 
-    Date Last Modified: 1/25/2016
+    Date Last Modified: 1/26/2016
 
     Purpose:
         This library uses the SymbolicNumber library to perform symbolic
