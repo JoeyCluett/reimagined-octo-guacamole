@@ -1,11 +1,28 @@
 /*
-    Author: Joey Cluett
+    SymbolicArithetic, arbitrary preision symbolic arithmetic
+    Copyright (C) 2016  Joseph Cluett
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+    Author(s):
+        Joseph Cluett (main author)
 
     File Type: implementation, SymbolicArithmetic
 
     Date Created: 1/5/2016
 
-    Date Last Modified: 1/27/2016
+    Date Last Modified: 1/29/2016
 
     Purpose:
         To perform arbitrary precision arithmetic on two symbolic numbers
@@ -23,10 +40,12 @@
 using namespace std;
 
 SymNum* SymbolicArithmetic::add(SymNum* augend, SymNum* addend) {
-    cout << "\tStarting add..." << endl;
+    if(_DEBUG_)
+        cout << "\tStarting add..." << endl;
     SymNum* result = new SymNum;
     //add appropiate number of zeroes to numbers
-    cout << "\tAligning numbers..." << endl;
+    if(_DEBUG_)
+        cout << "\tAligning numbers..." << endl;
     align_decimal(augend, addend);
 
     result->clear_vector();
@@ -35,8 +54,8 @@ SymNum* SymbolicArithmetic::add(SymNum* augend, SymNum* addend) {
     //addend->PrintSymNum();
     int carry_over = 0;
     int temp_result = 0;
-
-    cout << "\tPreparing for addition operation..." << endl << endl;
+    if(_DEBUG_)
+        cout << "\tPreparing for addition operation..." << endl << endl;
     //actual addition operation
     if(augend->get_sign() && addend->get_sign()) {
         for(int i = augend->get_vector_size() - 1; i >= 0; i--) {
@@ -70,8 +89,8 @@ SymNum* SymbolicArithmetic::add(SymNum* augend, SymNum* addend) {
 
     //result->PrintSymNum();
     //result->SetSign(SYMNUM_POSITIVE);
-
-    cout << "\tEnding add..." << endl;
+    if(_DEBUG_)
+        cout << "\tEnding add..." << endl;
 
     return result;
 
@@ -93,34 +112,42 @@ SymNum* SymbolicArithmetic::multiply(SymNum* multiplicand, SymNum* multiplier) {
 
     //multiply and add all whole numbers, then shift at the end
     for(int i = multiplier->get_vector_size()-1; i >= 0; i--) {
-        cout << endl << "Index of multiplier: " << (int) i << endl;
+        if(_DEBUG_)
+            cout << endl << "Index of multiplier: " << (int) i << endl;
         //ensure that we are not allocating excessive memory
         delete temp_result;
 
-        cout << endl << "Multiplying by single digit..." << endl;
+        if(_DEBUG_)
+            cout << endl << "Multiplying by single digit..." << endl;
         //retrieve result of single digit muliplication
         temp_result = multiply_single_digit(multiplicand, convert_char(multiplier->at_vector_index(i)));
 
-        cout << "Print after multiply: ";
+        if(_DEBUG_)
+            cout << "Print after multiply: ";
         temp_result->PrintSymNum();
 
-        cout << "Shifting left..." << endl;
+        if(_DEBUG_)
+            cout << "Shifting left..." << endl;
         //shift temp result left appropiate number of places
         temp_result->AppendTrailingZeroes(mvs - i - 1);
         temp_result->set_digits_right(temp_result->get_digits_right() - (mvs - i - 1));
         temp_result->set_digits_left(temp_result->get_vector_size() - temp_result->get_digits_right());
 
-        cout << "Print after left-shift: ";
+        if(_DEBUG_)
+            cout << "Print after left-shift: ";
         temp_result->PrintSymNum();
 
-        cout << "Deallocating memory..." << endl;
+        if(_DEBUG_)
+            cout << "Deallocating memory..." << endl;
         //memory cleanup (must be done after every iteration or memory will quickly fill up
         temp_result_2 = add(result, temp_result);
         result= temp_result_2;
         temp_result_2 = 0;
 
-        cout << "Result after iteration: ";
-        result->PrintSymNum();
+        if(_DEBUG_) {
+            cout << "Result after iteration: ";
+            result->PrintSymNum();
+        }
     }
 
     delete temp_result; //last memory deallocation
@@ -129,8 +156,10 @@ SymNum* SymbolicArithmetic::multiply(SymNum* multiplicand, SymNum* multiplier) {
     result->set_digits_right(multiplicand->get_digits_right() + multiplier->get_digits_right());
     result->set_digits_left(result->get_vector_size() - result->get_digits_right());
 
-    cout << "Result after final left-shift: ";
-    result->PrintSymNum();
+    if(_DEBUG_){
+        cout << "Result after final left-shift: ";
+        result->PrintSymNum();
+    }
 
     return result;
 }
@@ -140,21 +169,25 @@ SymNum* SymbolicArithmetic::divide(SymNum* dividend, SymNum* divisor) {
 }
 
 void SymbolicArithmetic::align_decimal(SymNum* operand_1, SymNum* operand_2) {
-    cout << "\t\tIn align_decimal function..." << endl; //debug
+    if(_DEBUG_)
+        cout << "\t\tIn align_decimal function..." << endl; //debug
 
-    cout << "\t\tTruncating first operand..." << endl; //debug
+    if(_DEBUG_)
+        cout << "\t\tTruncating first operand..." << endl; //debug
     //truncate both numbers
     operand_1->TruncateLeadingZeroes();
     operand_1->TruncateTrailingZeroes();
 
-    cout << "\t\tTruncating second operand..." << endl; //debug
+    if(_DEBUG_)
+        cout << "\t\tTruncating second operand..." << endl; //debug
     operand_2->TruncateLeadingZeroes();
     operand_2->TruncateTrailingZeroes();
 
     unsigned int op_1 = operand_1->get_digits_left(),
                  op_2 = operand_2->get_digits_left();
 
-    cout << "\t\tTesting digits_left..." << endl; //debug
+    if(_DEBUG_)
+        cout << "\t\tTesting digits_left..." << endl; //debug
     //test leading zeroes first
     if(op_1 != op_2) {
         if(op_1 > op_2) {
@@ -169,7 +202,8 @@ void SymbolicArithmetic::align_decimal(SymNum* operand_1, SymNum* operand_2) {
     op_1 = operand_1->get_digits_right();
     op_2 = operand_2->get_digits_right();
 
-    cout << "\t\tTesting digits_right..." << endl; //debug
+    if(_DEBUG_)
+        cout << "\t\tTesting digits_right..." << endl; //debug
     //test trailing zeroes
     if(op_1 != op_2) {
         if(op_1 > op_2) {
@@ -215,7 +249,8 @@ char SymbolicArithmetic::convert_int(int digit) {  //decimal-to-char
 
 SymNum* SymbolicArithmetic::multiply_single_digit(SymNum* main_operand, int constant_int) {
 
-    cout << "In MSD function..." << endl;
+    if(_DEBUG_)
+        cout << "In MSD function..." << endl;
     //test if constant_int is in valid range
     if(constant_int < 0 || constant_int > 9)
         return 0;
